@@ -1,6 +1,29 @@
+ESX						= nil
+local CurrentAction		= nil
+local PlayerData		= {}
+
 local shieldActive = false
 local shieldEntity = nil
 local hadPistol = false
+
+Citizen.CreateThread(function()
+	while ESX == nil do
+		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+		Citizen.Wait(0)
+	end
+end)
+
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+	PlayerData = xPlayer
+end)
+
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job)
+  PlayerData.job = job
+end)
+
+
 
 -- ANIM
 local animDict = "combat@gestures@gang@pistol_1h@beckon"
@@ -10,18 +33,21 @@ local prop = "prop_ballistic_shield"
 local pistol = GetHashKey("WEAPON_PISTOL")
 
 RegisterCommand("shield", function()
+
     if shieldActive then
         DisableShield()
     else
         EnableShield()
     end
-end, false)
+
+end)
 
 function EnableShield()
+	  if PlayerData.job.name == 'police' then
     shieldActive = true
     local ped = GetPlayerPed(-1)
     local pedPos = GetEntityCoords(ped, false)
-    
+
     RequestAnimDict(animDict)
     while not HasAnimDictLoaded(animDict) do
         Citizen.Wait(100)
@@ -48,6 +74,9 @@ function EnableShield()
         hadPistol = false
     end
     SetEnableHandcuffs(ped, true)
+	else
+		ESX.ShowNotification('Not a Cop!')
+	 end
 end
 
 function DisableShield()
@@ -62,6 +91,7 @@ function DisableShield()
     SetEnableHandcuffs(ped, false)
     hadPistol = false
     shieldActive = false
+
 end
 
 Citizen.CreateThread(function()
@@ -73,7 +103,7 @@ Citizen.CreateThread(function()
                 while not HasAnimDictLoaded(animDict) do
                     Citizen.Wait(100)
                 end
-            
+
                 TaskPlayAnim(ped, animDict, animName, 8.0, -8.0, -1, (2 + 16 + 32), 0.0, 0, 0, 0)
             end
         end
