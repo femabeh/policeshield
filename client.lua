@@ -34,13 +34,39 @@ local pistol = GetHashKey("WEAPON_PISTOL")
 
 RegisterCommand("shield", function()
 
-    if shieldActive then
-        DisableShield()
-    else
-        EnableShield()
-    end
+	ESX.TriggerServerCallback('lenzh:getItemAmount', function(qtty)
+			if qtty > 0 then
+					if shieldActive then
+							DisableShield()
+					else
+							EnableShield()
+					end
+			else
+					ESX.ShowNotification("You don't have a ~r~Police Shield ~s~")
+			end
+
+	end, 'shield')
 
 end)
+
+RegisterNetEvent('lenzh:shield')
+AddEventHandler('lenzh:shield', function()
+    ESX.TriggerServerCallback('lenzh:getItemAmount', function(qtty)
+        if qtty > 0 then
+            if shieldActive then
+                DisableShield()
+            else
+                EnableShield()
+            end
+        else
+            ESX.ShowNotification("You don't have a ~r~Police Shield ~s~")
+        end
+
+    end, 'shield')
+
+end)
+
+
 
 function EnableShield()
 	  if PlayerData.job.name == 'police' then

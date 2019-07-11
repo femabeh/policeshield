@@ -1,4 +1,3 @@
-# shield
 FiveM Police Shield
 
-I don't care if you use my code. No selling / Always give me credit for what I did.. Have fun..
+made by xander1998 modified to use with ESX jobs and made it an item to require
