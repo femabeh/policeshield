@@ -3,7 +3,7 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-ESX.RegisterUseableItem('shield', function()
+ESX.RegisterUsableItem('shield', function()
   TriggerClientEvent('lenzh:shield')
 end)
 
